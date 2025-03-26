@@ -4,7 +4,7 @@ from typing import Optional, List, Dict, Union
 
 # Import the BaseConfig from our implementation
 # For testing purposes, you might need to adjust the import path
-from src.ml_config.configuration import BaseConfig
+from ml_config.configuration import BaseConfig
 
 # Define test configuration classes
 @dataclass
