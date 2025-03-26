@@ -5,6 +5,9 @@ on:
     types: [created]
 
 jobs:
+  test:
+    uses: ./.github/workflows/python-tests.yml
+
   deploy:
     runs-on: ubuntu-latest
     steps:
