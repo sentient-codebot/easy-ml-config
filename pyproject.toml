@@ -1,0 +1,16 @@
+[project]
+name = "ml-config"
+version = "1.0.0"
+description = "provides a convenient base configuration class for machine learning projects"
+readme = "README.md"
+authors = [
+    { name = "Nan Lin", email = "nansense97@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
