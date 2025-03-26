@@ -1,13 +1,69 @@
-# ml-config
+# easy-ml-config
 
-Super lightweight library to provide a simple base configuration class for machine learning projects. 
-There is only one module `ml_config.configuration` that contains the `BaseConfig` class. 
+Super lightweight library to provide a simple base configuration class to maintain consistency and reproducibility for machine learning projects. 
+There is only one module `ml_config.configuration` that contains the `BaseConfig` class, which allows you to:
+- Define complex and nested configuration classes. 
+- Export/Import your configuration to a dictionary or a yaml file with simply `to_dict()`, `from_dict`, `to_yaml` and `from_yaml`. 
 
-## Features
 
-- Support for nested configurations
-- Hassle-free configuration initialization from nested dictionary and yaml file. 
-- Hassle-free configuration output to dictionary and yaml file. 
+```python
+@dataclass
+class ValidationConfig(BaseConfig):
+    batch_size: int
+    upload_to_server: bool = False
+
+@dataclass
+class TrainConfig(BaseConfig):
+    num_epochs: int
+    batch_size: int
+    learning_rate: float
+    validation_config: ValidationConfig | None = None
+
+class ModelConfig(BaseConfig):
+    num_layer: int
+
+@dataclass
+class MyExpConfig(BaseConfig):
+    model: MyModelConfig
+    train: TrainConfig
+    exp_id: str
+
+# Initialize from a dictionary
+exp_config = MyExpConfig.from_dict({
+    "model": {
+        "num_layer": 3,
+    },
+    "train": {
+        "num_epochs": 10,
+        "batch_size": 32,
+        "learning_rate": 0.001,
+        "validation_config": {
+            "batch_size": 16,
+            "upload_to_server": False
+        } # optional
+    },
+    "exp_id": "exp_1"
+})
+
+# Export to a yaml file
+exp_config.to_yaml("exp_config_001.yaml")
+
+# Initialize from a yaml file
+exp_config = MyExpConfig.from_yaml("exp_config_001.yaml")
+```
+The yaml file will look like this:
+```yaml
+model:
+    num_layer: 3
+train:
+    num_epochs: 10
+    batch_size: 32
+    learning_rate: 0.001
+    validation_config:
+        batch_size: 16
+        upload_to_server: false
+exp_id: exp_1
+```
 
 ## Installation
 ```bash
