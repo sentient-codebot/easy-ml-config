@@ -11,7 +11,7 @@ There is only one module `ml_config.configuration` that contains the `BaseConfig
 
 ## Installation
 ```bash
-pip install ml-config
+pip install easy-ml-config
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ Start with defining your own configuration by inheriting from `BaseConfig`. Once
 ```python
 from dataclasses import dataclass
 
-from ml_config import BaseConfig
+from easy_ml_config import BaseConfig
 
 
 @dataclass
