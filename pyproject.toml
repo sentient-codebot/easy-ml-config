@@ -1,6 +1,6 @@
 [project]
 name = "easy-ml-config"
-version = "1.0.3"
+version = "1.0.4"
 description = "provides a convenient base configuration class for machine learning projects"
 readme = "README.md"
 authors = [
