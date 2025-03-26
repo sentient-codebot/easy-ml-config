@@ -7,6 +7,9 @@ There is only one module `ml_config.configuration` that contains the `BaseConfig
 
 
 ```python
+from dataclasses import dataclass
+from easy_ml_config import BaseConfig
+
 @dataclass
 class ValidationConfig(BaseConfig):
     batch_size: int
