@@ -1,5 +1,5 @@
 import types
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field, fields, MISSING
 from typing import ClassVar, Dict, Type, get_type_hints, get_origin, get_args, Union
 
 import yaml
@@ -89,7 +89,10 @@ class BaseConfig:
                 if v is None:
                     # Get field information to check if the field is optional
                     field_info = next((f for f in fields(cls) if f.name == k), None)
-                    if field_info and field_info.default is not field_info.default_factory:
+                    if field_info and (
+                        field_info.default is not MISSING \
+                        or field_info.default_factory is not MISSING
+                        ):
                         # Field has a default value, so it's optional
                         filtered_kwargs[k] = None
                     else:

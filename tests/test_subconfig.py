@@ -29,8 +29,8 @@ class ComplexConfig(BaseConfig):
     deep_nested: DeepNestedConfig
     # optional_config: Optional[OptionalConfig] = None
     optional_config: OptionalConfig | None = None
-    value_list: List[int] = None
-    value_dict: Dict[str, float] = None
+    value_list: list[int] | None = None
+    value_dict: Dict[str, float] | None = None
 
 # Tests
 def test_automatic_subconfig_registration():
