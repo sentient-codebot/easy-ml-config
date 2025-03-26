@@ -15,6 +15,11 @@ pip install ml-config
 ```
 
 ## Usage
+
+Start with defining your own configuration by inheriting from `BaseConfig`. Once you have that, you can utilize all the predefined functionalities of `BaseConfig`.
+
+### Define Your Configuration
+
 ```python
 from dataclasses import dataclass
 
@@ -30,18 +35,14 @@ class MyExpConfig(BaseConfig):
     model: MyModelConfig
     batch_size: int
     learning_rate: float
+```
 
-    subconfigs: ClassVar[dict] = {
-        "model": MyModelConfig,
-    }
+### Instantiate Your Configuration
+When you are running an experiment with a specific settings. Initialize your configurations. 
 
-    @classmethod
-    def init_subconfig(cls, subconfig_name, subconfig_dict) -> BaseConfig | dict:
-        if subconfig_name not in cls.subconfigs:
-            return subconfig_dict
-        if subconfig_name == "model":
-            return MyModelConfig.from_dict(subconfig_dict)
+#### Initialize from A Dictionary
 
+```python
 def main():
     nested_args = {
         "model": {
@@ -57,3 +58,33 @@ if __name__ == "__main__":
     main()
 ```
 
+#### Initialize from A YAML File
+
+```yaml
+# config.yaml
+model:
+  num_layer: 3
+batch_size: 32
+learning_rate: 0.001
+```
+
+```python
+config = MyExpConfig.from_yaml("config.yaml")
+```
+
+### Output Your Configuration
+Often you might want to save your configuration to a file. You can do that easily with the `to_dict` and `to_yaml` methods. 
+
+```python
+# Save to a dictionary
+config_dict = config.to_dict()
+# Save to a yaml file
+config.to_yaml("config.yaml")
+```
+The exported dictionary and yaml file can be directly used again to recreate the Configurations.
+```python
+# Load from a dictionary
+config = MyExpConfig.from_dict(config_dict)
+# Load from a yaml file
+config = MyExpConfig.from_yaml("config.yaml")
+```
