@@ -1,12 +1,94 @@
 import types
-from dataclasses import dataclass, field, fields, MISSING
-from typing import ClassVar, Dict, Type, get_type_hints, get_origin, get_args, Union
+from dataclasses import dataclass, fields, MISSING
+from typing import ClassVar, get_type_hints, get_origin, get_args, Union
 
 import yaml
 
 
 @dataclass
 class BaseConfig:
+    """
+    BaseConfig is a base class you can inherit from to get access to a series of \
+        convient utility methods.
+
+    Methods:
+        from_dict(kwargs: dict): 
+            Create a configuration instance from a dictionary.
+            
+        to_dict(): 
+            Convert the configuration object to a dictionary.
+            
+        from_yaml(path: str): 
+            Create a configuration instance from a YAML file.
+            
+        to_yaml(path: str): 
+            Save the configuration object to a YAML file.
+            
+        inherit(parent, **kwargs): 
+            Create a new configuration instance by inheriting from a parent 
+            configuration with optional overrides.
+
+    Example usage:
+        ```python
+        from dataclasses import dataclass
+        from easy_ml_config import BaseConfig
+        
+        # Define configuration classes
+        @dataclass
+        class ModelConfig(BaseConfig):
+            num_layers: int
+            hidden_size: int
+            dropout_rate: float = 0.1
+        
+        @dataclass
+        class TrainingConfig(BaseConfig):
+            batch_size: int
+            learning_rate: float
+            num_epochs: int
+            
+        @dataclass
+        class ExperimentConfig(BaseConfig):
+            model: ModelConfig
+            training: TrainingConfig
+            experiment_name: str
+            
+        # Create a configuration from a dictionary
+        exp_config = ExperimentConfig.from_dict({
+            "model": {
+                "num_layers": 3,
+                "hidden_size": 256,
+            },
+            "training": {
+                "batch_size": 32,
+                "learning_rate": 0.001,
+                "num_epochs": 10
+            },
+            "experiment_name": "experiment_001"
+        })
+        
+        # Save to YAML
+        exp_config.to_yaml("experiment_001.yaml")
+        
+        # Load from YAML
+        loaded_config = ExperimentConfig.from_yaml("experiment_001.yaml")
+        
+        # Create a new configuration by inheriting from an existing one
+        new_config = ExperimentConfig.inherit(
+            exp_config,
+            experiment_name="experiment_002",
+            training=TrainingConfig(
+                batch_size=64,
+                learning_rate=0.0005,
+                num_epochs=20
+            )
+        )
+        ```
+
+    Notes:
+        - All nested configuration classes must inherit from BaseConfig
+        - Optional nested configurations can be defined using `Optional[Config]` or `Config | None`
+        - The class automatically handles nested configuration objects during serialization and deserialization
+    """
     subconfigs: ClassVar[dict] = {}
 
     @staticmethod
