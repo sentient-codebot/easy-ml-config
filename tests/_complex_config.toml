@@ -1,0 +1,24 @@
+name = "complex"
+value_list = [1, 2, 3]
+
+[deep_nested]
+id = "deep1"
+
+[deep_nested.nested]
+name = "deep_nested"
+value = 99
+
+[nested_config]
+name = "nested"
+value = 42
+
+[optional_config]
+required = "required_value"
+
+[optional_config.optional_nested]
+name = "optional_nested"
+value = 123
+
+[value_dict]
+a = 1.0
+b = 2.0
