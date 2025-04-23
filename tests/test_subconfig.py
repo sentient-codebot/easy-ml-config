@@ -1,3 +1,4 @@
+import os
 import pytest
 from dataclasses import dataclass
 from typing import Optional, List, Dict, Union
@@ -5,6 +6,23 @@ from typing import Optional, List, Dict, Union
 # Import the BaseConfig from our implementation
 # For testing purposes, you might need to adjust the import path
 from easy_ml_config.configuration import BaseConfig
+
+def find_dict_differences(dict1, dict2):
+    # Find keys in dict1 but not in dict2
+    only_in_dict1 = dict1.keys() - dict2.keys()
+    if only_in_dict1:
+        print(f"Keys only in first dict: {only_in_dict1}")
+    
+    # Find keys in dict2 but not in dict1
+    only_in_dict2 = dict2.keys() - dict1.keys()
+    if only_in_dict2:
+        print(f"Keys only in second dict: {only_in_dict2}")
+    
+    # Find keys in both but with different values
+    common_keys = dict1.keys() & dict2.keys()
+    for key in common_keys:
+        if dict1[key] != dict2[key]:
+            print(f"Different values for key '{key}': {dict1[key]} vs {dict2[key]}")
 
 # Define test configuration classes
 @dataclass
@@ -158,7 +176,7 @@ def test_to_dict_nested():
     
     assert config_dict == expected
 
-def test_round_trip():
+def test_round_trip_dict():
     """Test that converting from dict to config and back to dict preserves the structure."""
     original_dict = {
         "name": "complex",
@@ -183,6 +201,58 @@ def test_round_trip():
     
     # Check that the result matches the original
     assert result_dict == original_dict
+
+def test_round_trip_yaml():
+    """Test that converting from dict to config and back to yaml preserves the structure."""
+    original_dict = {
+        "name": "complex",
+        "nested_config": {"value": 42, "name": "nested"},
+        "deep_nested": {
+            "id": "deep1",
+            "nested": {"value": 99, "name": "deep_nested"}
+        },
+        "optional_config": {
+            "required": "required_value",
+            "optional_nested": {"value": 123, "name": "optional_nested"}
+        },
+        "value_list": [1, 2, 3],
+        "value_dict": {"a": 1.0, "b": 2.0}
+    }
+    
+    # Convert to config
+    config = ComplexConfig.from_dict(original_dict)
+    
+    # Convert to YAML and back
+    yaml_path = "tests/_test_config.yaml"
+    config.to_yaml(yaml_path)
+    loaded_config = ComplexConfig.from_yaml(yaml_path)
+    loaded_dict = loaded_config.to_dict()
+    assert loaded_dict == original_dict
+
+def test_from_toml():
+    original_dict = {
+        "name": "complex",
+        "nested_config": {"value": 42, "name": "nested"},
+        "deep_nested": {
+            "id": "deep1",
+            "nested": {"value": 99, "name": "deep_nested"}
+        },
+        "optional_config": {
+            "required": "required_value",
+            "optional_nested": {"value": 123, "name": "optional_nested"}
+        },
+        "value_list": [1, 2, 3],
+        "value_dict": {"a": 1.0, "b": 2.0}
+    }
+    
+    # Read from toml if exists
+    toml_path = "tests/_complex_config.toml"
+    if os.path.exists(toml_path):
+        loaded_config = ComplexConfig.from_toml(toml_path)
+        loaded_dict = loaded_config.to_dict()
+        assert loaded_dict == original_dict
+    else:
+        raise FileNotFoundError(f"File {toml_path} not found for testing.")
 
 def test_inherit():
     """Test the inherit method for creating derived configs."""

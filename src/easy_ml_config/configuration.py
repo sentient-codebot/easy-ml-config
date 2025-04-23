@@ -1,3 +1,4 @@
+import tomllib
 import types
 from dataclasses import dataclass, fields, MISSING
 from typing import ClassVar, get_type_hints, get_origin, get_args, Union
@@ -210,13 +211,24 @@ class BaseConfig:
     def from_yaml(cls, path: str):
         with open(path) as f:
             _obj = cls.from_dict(yaml.safe_load(f))
-            _obj.load_path = path
 
         return _obj
 
     def to_yaml(self, path):
         with open(path, "w") as f:
             yaml.safe_dump(self.to_dict(), f)
+
+    @classmethod
+    def from_toml(cls, path: str):
+        with open(path, "rb") as f:
+            _obj = cls.from_dict(tomllib.load(f))
+
+        return _obj
+
+    def to_toml(self, path: str):
+        raise NotImplementedError(
+            "Saving to TOML is not implemented. Please use YAML instead."
+        )
 
 
 @dataclass

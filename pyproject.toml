@@ -1,12 +1,12 @@
 [project]
 name = "easy-ml-config"
-version = "1.1.0"
+version = "1.2.0"
 description = "provides a convenient base configuration class for machine learning projects"
 readme = "README.md"
 authors = [
     { name = "Nan Lin", email = "nansense97@gmail.com" }
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "pyyaml>=6.0.2",
 ]

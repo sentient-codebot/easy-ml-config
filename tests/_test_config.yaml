@@ -1,0 +1,21 @@
+deep_nested:
+  id: deep1
+  nested:
+    name: deep_nested
+    value: 99
+name: complex
+nested_config:
+  name: nested
+  value: 42
+optional_config:
+  optional_nested:
+    name: optional_nested
+    value: 123
+  required: required_value
+value_dict:
+  a: 1.0
+  b: 2.0
+value_list:
+- 1
+- 2
+- 3
